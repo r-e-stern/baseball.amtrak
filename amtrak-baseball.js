@@ -1,6 +1,6 @@
 function Station(x,y,n){
-    this.lat = x;
-    this.long = y;
+    this.long = x;
+    this.lat = y;
     this.name = n;
     this.distanceTo= function (a,b){
         return latLongDistForm(this.lat, this.long, a, b);
@@ -31,8 +31,8 @@ function formatM(n){
 }
 
 function Stadium(x,y,n,l){
-    this.lat = x;
-    this.long = y;
+    this.long = x;
+    this.lat = y;
     this.name = n;
     this.level = l;
     this.closestStation = function(array){
