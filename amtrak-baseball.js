@@ -56,6 +56,23 @@ function Stadium(x,y,n,l){
           +this.closestStation(stations).name+"</td><td>"
           +formatM(this.distanceToClosestStation())+"</td></tr>";
     };
+    this.levelN = function(){
+        if(this.level=="MLB"){
+            return 6;
+        }else if(this.level=="AAA"){
+            return 5;
+        }else if(this.level=="AA"){
+            return 4;
+        }else if(this.level=="A"){
+            return 3;
+        }else if(this.level=="A (short-season)"){
+            return 2;
+        }else if(this.level=="Rookie"){
+            return 1;
+        }else{
+            return 0;
+        }
+    };
 }
 
 var stations = [new Station(-71.074376,42.347396,"Boston, MA (BOS)"),
@@ -794,8 +811,38 @@ $(document).ready(function(){
     stadiums.sort(function(a,b){
         return a.distanceToClosestStation() - b.distanceToClosestStation();
     });
-    $("body").append("<table><tr><th>Ballpark</th><th>Class</th><th>Closest Amtrak</th><th>Distance</th></tr></table>");
+    dispTable(4);
+});
+
+function dispTable(n){
+    $("body").append("<table><tr><th id='1'>Ballpark</th><th id='2'>Class</th><th id='3'>Closest Amtrak</th><th id='4'>Distance</th></tr></table>");
     for(var i=0; i<stadiums.length; i++){
         $("table").append(stadiums[i].table());
     }
-});
+    $("th:nth-of-type(even)").append(" <em>&#x25C4;</em>");
+    $("th:nth-of-type("+n+") em").addClass("active").html("&#x25BC;");
+    $("em").click(function(){
+        var n = $(this).parents()[0].id;
+        if(!$(this).hasClass("active")){
+            $("table").remove();
+            if(n==2){
+                stadiums.sort(function(a,b){
+                    return b.levelN() - a.levelN();
+                });
+            }else{
+                n=4;
+                stadiums.sort(function(a,b){
+                    return a.distanceToClosestStation() - b.distanceToClosestStation();
+                });
+            }
+            dispTable(n);
+        }
+    });
+    for(var i=0; i<$("tr").length; i++){
+        if(i==1 || i%5==0 && i!=0){
+            $("tr:nth-of-type("+(i+1)+")").prepend("<td>"+i+"</td>");
+        }else{
+            $("tr:nth-of-type("+(i+1)+")").prepend("<td></td>");
+        }
+    }
+}
